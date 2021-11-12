@@ -1,0 +1,63 @@
+version: "3"
+
+volumes:
+  mysql_data:
+  oracle_data:
+  postgres_data:
+  mssql_data:
+
+services:
+  python:
+    build: .
+    image: python_patterns_and_oop_local
+    container_name: python
+    depends_on:
+      - postgres
+    command: "python main.py"
+
+#  mysql:
+#    image: mysql:5.7
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_DATABASE: "db"
+#      MYSQL_USER: "user"
+#      MYSQL_PASSWORD: "password"
+#      MYSQL_ROOT_PASSWORD: "password"
+#    ports:
+#      - "3306:3306"
+#    expose:
+#      - "3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+
+#  oracle:
+#    image: oracle/database:12.1.0.2-ee
+#    volumes:
+#      - oracle_data:/opt/oracle/oradata # persistent oracle database data.
+#    ports:
+#      - "1521:1521"
+#      - "8080:8080"
+#      - "5500:5500"
+
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_data:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+#  mssql:
+#    image: "mcr.microsoft.com/mssql/server"
+#    ports:
+#      - "1433:1433"
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - SA_PASSWORD=Secret1234
+#    volumes:
+#      - mssql_data:/var/opt/mssql
